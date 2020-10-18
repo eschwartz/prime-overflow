@@ -32,6 +32,7 @@ router.get('/', rejectUnauthenticated, async(req, res, next) => {
     const isInstructor = req.user.authLevel === 'INSTRUCTOR';
     const dbRes = await pool.query(`
       SELECT 
+        question.id,
         question.title, 
         question.details,
         "user"."id" as "authorId",
@@ -48,6 +49,7 @@ router.get('/', rejectUnauthenticated, async(req, res, next) => {
     `, isInstructor ? [] : [req.user.cohortId]);
 
     res.send(dbRes.rows.map(row => ({
+      id: row.id,
       title: row.title,
       details: row.details,
       author: {

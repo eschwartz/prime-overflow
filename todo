@@ -6,7 +6,7 @@ Basic Base Mode
 [ ] List questions
   [x] List all, for instructor
   [x] GET /questions only show questions in student's cohort
-  [ ] Truncate question details
+  [x] Truncate question details
   [ ] Summary of answers/comments/isAnswered
   [ ] Display most recent first
 [ ] See question details

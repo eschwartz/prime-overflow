@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
 
 class QuestionList extends Component {
 
@@ -25,7 +26,9 @@ class QuestionList extends Component {
         <ul>
           {this.props.questions.map(question => 
             <>
-              <h3>{question.title}</h3>
+              <h3>
+                <Link to={`/questions/${question.id}`}>{question.title}</Link>
+              </h3>
               <div>{this.truncateDetails(question.details, 20)}</div>
               <div>-- {question.author.fullName} ({question.author.cohort.name})</div>
             </>

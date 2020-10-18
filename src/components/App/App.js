@@ -14,6 +14,7 @@ import Footer from '../Footer/Footer';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import NewQuestion from '../NewQuestion/NewQuestion';
+import QuestionDetails from '../QuestionDetails/QuestionDetails';
 import QuestionList from '../QuestionList/QuestionList'
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
@@ -49,6 +50,11 @@ class App extends Component {
               exact
               path="/questions/new"
               component={NewQuestion}
+            />
+
+            <ProtectedRoute
+              path="/questions/:id"
+              component={QuestionDetails}
             />
 
             {/* Visiting localhost:3000/about will show the about page. */}
