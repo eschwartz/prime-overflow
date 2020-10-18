@@ -29,32 +29,35 @@ router.post('/', rejectUnauthenticated, async (req, res, next) => {
 
 router.get('/', rejectUnauthenticated, async(req, res, next) => {
   try {
-    // TODO: Only show 
-    if (req.user.authLevel !== "INSTRUCTOR") {
-      res.status(500).send({
-        message: "Student question search not yet implemented"
-      });
-      return;
-    }
-
-    // TODO Allow filtering by cohort, for instructor
+    const isInstructor = req.user.authLevel === 'INSTRUCTOR';
     const dbRes = await pool.query(`
       SELECT 
         question.title, 
         question.details,
         "user"."id" as "authorId",
         "user"."fullName" as "authorFullName",
-        "user"."username" as "authorUsername"
+        "user"."username" as "authorUsername",
+        "cohort"."name" as "cohortName",
+        "cohort"."id" as "cohortId"
       FROM "question"
-      JOIN "user" on "user"."id" = "question"."authorId";
-    `);
+      JOIN "user" on "user"."id" = "question"."authorId"
+      JOIN "cohort" on "user"."cohortId" = "cohort"."id"
+      ${isInstructor ? ';' : `
+        WHERE "cohort"."id" = $1
+      `};
+    `, isInstructor ? [] : [req.user.cohortId]);
+
     res.send(dbRes.rows.map(row => ({
       title: row.title,
       details: row.details,
       author: {
         id: row.authorId,
         fullName: row.authorFullName,
-        username: row.authorUsername
+        username: row.authorUsername,
+        cohort: {
+          id: row.cohortId,
+          name: row.cohortName
+        }
       }
     })));
   }

@@ -17,7 +17,9 @@ Basic Base Mode
 [ ] Add cohort
 
 Parking lot:
-
+[ ] Hide "Ask a Question" for instructors
+[ ] Show cohort name on Questions list view
+[ ] Test questions list as Instructor (and other flows...)
 
 Styling
 Clean up (rename headers, footer, copy, etc)

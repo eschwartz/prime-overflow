@@ -18,8 +18,8 @@ class QuestionList extends Component {
           {this.props.questions.map(question => 
             <>
               <h3>{question.title}</h3>
-              <blockquote>{question.details}</blockquote>
-              <div>-- {question.author.fullName}</div>
+              <div>{question.details}</div>
+              <div>-- {question.author.fullName} ({question.author.cohort.name})</div>
             </>
           )}
         </ul>
