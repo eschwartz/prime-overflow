@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import NewAnswer from './NewAnswer';
 
 class QuestionDetails extends Component {
   state = {
+    isAnswerMode: false
   };
 
   componentDidMount = () => {
@@ -12,6 +14,16 @@ class QuestionDetails extends Component {
         type: 'FETCH_QUESTIONS',
       });
     }
+  }
+
+  toggleNewAnswerMode = () => {
+    this.setState({
+      isNewAnswerMode: !this.state.isNewAnswerMode
+    });
+  }
+
+  onSubmitAnswer = () => {
+    alert('TODO: submit');
   }
 
   render() {
@@ -33,6 +45,7 @@ class QuestionDetails extends Component {
 
     return (
       <>
+        {/* The Question  */}
         <h2>{question.title}</h2>
         <div>
           {question.details}
@@ -44,6 +57,21 @@ class QuestionDetails extends Component {
             <button onClick={this.onEdit}>Edit Question</button>
           }
         </div>
+
+        {this.state.isNewAnswerMode ?
+          // Answer mode
+          <NewAnswer 
+            onSubmit={this.onSubmitAnswer}
+            onCancel={this.toggleNewAnswerMode}
+          />
+          :
+          // Not answer mode
+          <div>
+              <button onClick={this.toggleNewAnswerMode}>
+                Submit an Answer
+              </button>
+            </div>
+        }
       </>
     );
   }

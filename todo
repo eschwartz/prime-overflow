@@ -9,7 +9,7 @@ Basic Base Mode
   [x] Truncate question details
   [ ] Summary of answers/comments/isAnswered
   [ ] Display most recent first
-[ ] See question details
+[x] See question details
 [ ] Answer question
 [ ] Comment on answer
 [ ] Accept answer
