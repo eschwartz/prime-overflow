@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
 
-class TemplateClass extends Component {
+class NewQuestion extends Component {
   state = {
     title: '',
     details: '',
@@ -60,4 +60,4 @@ class TemplateClass extends Component {
   }
 }
 
-export default connect(mapStoreToProps)(TemplateClass);
+export default connect(mapStoreToProps)(NewQuestion);

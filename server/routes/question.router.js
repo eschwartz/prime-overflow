@@ -27,4 +27,40 @@ router.post('/', rejectUnauthenticated, async (req, res, next) => {
   }
 });
 
+router.get('/', rejectUnauthenticated, async(req, res, next) => {
+  try {
+    // TODO: Only show 
+    if (req.user.authLevel !== "INSTRUCTOR") {
+      res.status(500).send({
+        message: "Student question search not yet implemented"
+      });
+      return;
+    }
+
+    // TODO Allow filtering by cohort, for instructor
+    const dbRes = await pool.query(`
+      SELECT 
+        question.title, 
+        question.details,
+        "user"."id" as "authorId",
+        "user"."fullName" as "authorFullName",
+        "user"."username" as "authorUsername"
+      FROM "question"
+      JOIN "user" on "user"."id" = "question"."authorId";
+    `);
+    res.send(dbRes.rows.map(row => ({
+      title: row.title,
+      details: row.details,
+      author: {
+        id: row.authorId,
+        fullName: row.authorFullName,
+        username: row.authorUsername
+      }
+    })));
+  }
+  catch (err) {
+    next(err);
+  }
+})
+
 module.exports = router;

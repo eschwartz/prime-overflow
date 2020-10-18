@@ -14,6 +14,7 @@ import Footer from '../Footer/Footer';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import NewQuestion from '../NewQuestion/NewQuestion';
+import QuestionList from '../QuestionList/QuestionList'
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
@@ -35,11 +36,18 @@ class App extends Component {
           <Nav />
           <Switch>
             {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-            <Redirect exact from="/" to="/home" />
+            <Redirect exact from="/" to="/questions" />
+
 
             <ProtectedRoute
               exact
-              path="/question/new"
+              path="/questions"
+              component={QuestionList}
+            />
+
+            <ProtectedRoute
+              exact
+              path="/questions/new"
               component={NewQuestion}
             />
 

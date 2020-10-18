@@ -4,6 +4,8 @@ Basic Base Mode
 [x] DB Schema
 [x] Create a question 
 [ ] List questions
+  [x] List all, for instructor
+  [ ] GET /questions only show questions in student's cohort
 [ ] Search questions
 [ ] Answer question
 [ ] Comment on answer
@@ -13,6 +15,9 @@ Basic Base Mode
 [ ] Edit comment
 [ ] Add student to cohort
 [ ] Add cohort
+
+Parking lot:
+
 
 Styling
 Clean up (rename headers, footer, copy, etc)

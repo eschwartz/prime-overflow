@@ -12,13 +12,13 @@ const Nav = (props) => {
   };
 
   if (props.store.user.id != null) {
-    loginLinkData.path = '/user';
-    loginLinkData.text = 'Home';
+    loginLinkData.path = '/questions';
+    loginLinkData.text = 'Questions';
   }
 
   return (
     <div className="nav">
-      <Link to="/home">
+      <Link to="/questions">
         <h2 className="nav-title">Prime Solo Project</h2>
       </Link>
       <div className="nav-right">
@@ -31,9 +31,11 @@ const Nav = (props) => {
 
         {props.store.user.id && (
           <>
-            <Link className="nav-link" to="/question/new">
+            
+            <Link className="nav-link" to="/questions/new">
               Ask a Question
             </Link>
+
             <LogOutButton className="nav-link" />
           </>
         )}
