@@ -5,8 +5,11 @@ Basic Base Mode
 [x] Create a question 
 [ ] List questions
   [x] List all, for instructor
-  [ ] GET /questions only show questions in student's cohort
-[ ] Search questions
+  [x] GET /questions only show questions in student's cohort
+  [ ] Truncate question details
+  [ ] Summary of answers/comments/isAnswered
+  [ ] Display most recent first
+[ ] See question details
 [ ] Answer question
 [ ] Comment on answer
 [ ] Accept answer
@@ -15,6 +18,10 @@ Basic Base Mode
 [ ] Edit comment
 [ ] Add student to cohort
 [ ] Add cohort
+[ ] Search questions
+[ ] By cohort (for instructors only)
+[ ] By isAnswered
+[ ] By text (in title, or details)
 
 Parking lot:
 [ ] Hide "Ask a Question" for instructors

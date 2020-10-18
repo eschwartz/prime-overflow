@@ -9,6 +9,14 @@ class QuestionList extends Component {
     })
   };
 
+  truncateDetails = (details, maxWords) => {
+    let words = details.split(' ');
+    if (words.length <= maxWords) {
+      return details;
+    }
+    return words.slice(0, maxWords - 1).join(' ') + '...';
+  }
+
   render() {
     return (
       <>
@@ -18,7 +26,7 @@ class QuestionList extends Component {
           {this.props.questions.map(question => 
             <>
               <h3>{question.title}</h3>
-              <div>{question.details}</div>
+              <div>{this.truncateDetails(question.details, 20)}</div>
               <div>-- {question.author.fullName} ({question.author.cohort.name})</div>
             </>
           )}
