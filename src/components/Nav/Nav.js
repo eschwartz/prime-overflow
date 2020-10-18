@@ -28,15 +28,16 @@ const Nav = (props) => {
           and call this link 'Login / Register' if they are not */}
           {loginLinkData.text}
         </Link>
-        {/* Show the link to the info page and the logout button if the user is logged in */}
+
         {props.store.user.id && (
           <>
-            <Link className="nav-link" to="/info">
-              Info Page
+            <Link className="nav-link" to="/question/new">
+              Ask a Question
             </Link>
             <LogOutButton className="nav-link" />
           </>
         )}
+
         {/* Always show this link since the about page is not protected */}
         <Link className="nav-link" to="/about">
           About
