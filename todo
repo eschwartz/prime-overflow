@@ -1,0 +1,24 @@
+Basic Base Mode
+[x] Wireframes
+[x] ERD
+[x] DB Schema
+[ ] Create a question 
+[ ] List questions
+[ ] Search questions
+[ ] Answer question
+[ ] Comment on answer
+[ ] Accept answer
+[ ] Edit question
+[ ] Edit answer
+[ ] Edit comment
+[ ] Add student to cohort
+[ ] Add cohort
+
+Styling
+Clean up (rename headers, footer, copy, etc)
+
+Stretch Goals
+[ ] Upload screenshots
+[ ] Slack integration
+[ ] Markdown questions / answers
+[ ] Lightbox images (for screenshots)
