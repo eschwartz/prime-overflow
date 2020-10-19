@@ -21,7 +21,7 @@ class QuestionList extends Component {
   render() {
     return (
       <>
-        <h1>Questions Search</h1>
+        <h1>Questions</h1>
 
         <ul>
           {this.props.questions.map(question => 
