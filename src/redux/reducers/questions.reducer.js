@@ -7,9 +7,11 @@ const questionsReducer = (state = [], action) => {
   }
 }
 
-export const activeQuestion = (state = {}, action) => {
+// Mange a "draft" of the question,
+// which is ready to be saved
+export const draftQuestion = (state = null, action) => {
   switch (action.type) {
-    case 'SET_ACTIVE_QUESTION':
+    case 'SET_DRAFT_QUESTION':
       return action.payload;
     default:
       return state;

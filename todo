@@ -10,18 +10,20 @@ Basic Base Mode
   [ ] Summary of answers/comments/isAnswered
   [ ] Display most recent first
 [x] See question details
-[ ] Answer question
+[x] Answer question
+[ ] Delete question
 [ ] Comment on answer
 [ ] Accept answer
-[ ] Edit question
+[x] Edit question
 [ ] Edit answer
+[ ] Delete answer
 [ ] Edit comment
 [ ] Add student to cohort
 [ ] Add cohort
 [ ] Search questions
-[ ] By cohort (for instructors only)
-[ ] By isAnswered
-[ ] By text (in title, or details)
+  [ ] By cohort (for instructors only)
+  [ ] By isAnswered
+  [ ] By text (in title, or details)
 
 Parking lot:
 [ ] Hide "Ask a Question" for instructors

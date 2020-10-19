@@ -4,7 +4,8 @@ import NewAnswer from './NewAnswer';
 
 class QuestionDetails extends Component {
   state = {
-    isAnswerMode: false
+    isAnswerMode: false,
+    isEditQuestionMode: false
   };
 
   componentDidMount = () => {
@@ -26,6 +27,12 @@ class QuestionDetails extends Component {
     });
   }
 
+  toggleEditQuestionMode = () => {
+    this.setState({
+      isEditQuestionMode: !this.state.isEditQuestionMode
+    });
+  }
+
   onSubmitAnswer = (answerDetails) => {
     this.props.dispatch({
       type: 'CREATE_ANSWER',
@@ -38,9 +45,37 @@ class QuestionDetails extends Component {
     this.toggleNewAnswerMode();
   }
 
+  updateDraftQuestion = (evt, prop) => {
+    this.props.dispatch({
+      type: 'SET_DRAFT_QUESTION',
+      payload: {
+        ...this.props.draftQuestion,
+        [prop]: evt.target.value
+      }
+    });
+  }
+
+  onSaveQuestionDraft = () => {
+    // Make sure the draft is up-to-date
+    this.props.dispatch({
+      type: 'SET_DRAFT_QUESTION',
+      payload: this.props.draftQuestion
+    });
+
+    // Persist the changes to the draft question
+    this.props.dispatch({
+      type: 'SAVE_DRAFT_QUESTION'
+    });
+
+    // Get out of "edit mode"
+    this.toggleEditQuestionMode();
+  }
+
   render() {
     console.log('props', this.props);
+    console.log('state', this.state);
     const question = this.props.question;
+    const draftQuestion = this.props.draftQuestion;
 
     // Handle missing question
     if (!question) {
@@ -55,21 +90,45 @@ class QuestionDetails extends Component {
     );
 
 
-
     return (
       <>
-        {/* The Question  */}
-        <h2>{question.title}</h2>
-        <div>
-          {question.details}
-        </div>
-        <em>Asked by {question.author.fullName}</em>
-
-        <div>
-          {canEdit && 
-            <button onClick={this.onEdit}>Edit Question</button>
-          }
-        </div>
+        {/* Edit Question */}
+        {this.state.isEditQuestionMode ?
+          <>
+            {/* Edit Question Title */}
+            <h2>
+              <input 
+                type="text"
+                value={draftQuestion.title}
+                onChange={(evt) => this.updateDraftQuestion(evt, 'title')}
+              />
+            </h2>
+            {/* Edit Question Details */}
+            <div>
+              <textarea 
+                value={draftQuestion.details}
+                onChange={(evt) => this.updateDraftQuestion(evt, 'details')}
+              />
+            </div>
+            {/* Save / Cancel buttons */}
+            <div>
+              <button onClick={this.toggleEditQuestionMode}>Cancel</button>
+              <button onClick={this.onSaveQuestionDraft}>Save Question</button>
+            </div>
+          </>
+          :
+          <div>
+            {/* Display Question  */}
+            <h2>{question.title}</h2>
+            <div>
+              {question.details}
+            </div>
+            <em>Asked by {question.author.fullName}</em>
+            {canEdit && 
+              <button onClick={this.toggleEditQuestionMode}>Edit Question</button>
+            }
+          </div>
+        }
 
         {/* Answer question form */}
         {this.state.isNewAnswerMode ?
@@ -122,6 +181,7 @@ export default connect((store, props) => {
 
   return {
     question,
+    draftQuestion: store.draftQuestion || question,
     answers,
     user: store.user,
   }
