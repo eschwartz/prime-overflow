@@ -31,6 +31,9 @@ class QuestionList extends Component {
               </h3>
               <div>{this.truncateDetails(question.details, 20)}</div>
               <div>-- {question.author.fullName} ({question.author.cohort.name})</div>
+              <em>
+                {question.hasAcceptedAnswer ? 'Solved! With ' : 'Unsolved with '} 
+                {question.answerCount} answer{question.answerCount === 1 ? '' : 's'}.</em>
             </>
           )}
         </ul>

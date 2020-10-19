@@ -111,19 +111,25 @@ router.get('/', rejectUnauthenticated, async(req, res, next) => {
         "user"."fullName" as "authorFullName",
         "user"."username" as "authorUsername",
         "cohort"."name" as "cohortName",
-        "cohort"."id" as "cohortId"
+        "cohort"."id" as "cohortId",
+        count(answer.id) as "answerCount",
+        count(case answer."isAccepted" when TRUE then 1 else null END) as "acceptedAnswerCount"
       FROM "question"
       JOIN "user" on "user"."id" = "question"."authorId"
       JOIN "cohort" on "user"."cohortId" = "cohort"."id"
-      ${isInstructor ? ';' : `
+      FULL JOIN answer on answer."questionId" = question.id
+      ${isInstructor ? '' : `
         WHERE "cohort"."id" = $1
-      `};
+      `}
+      GROUP BY question.id, "user".id, cohort.id;
     `, isInstructor ? [] : [req.user.cohortId]);
 
     res.send(dbRes.rows.map(row => ({
       id: row.id,
       title: row.title,
       details: row.details,
+      answerCount: Number(row.answerCount),
+      hasAcceptedAnswer: row.acceptedAnswerCount > 0,
       author: {
         id: row.authorId,
         fullName: row.authorFullName,
@@ -131,7 +137,7 @@ router.get('/', rejectUnauthenticated, async(req, res, next) => {
         cohort: {
           id: row.cohortId,
           name: row.cohortName
-        }
+        },
       }
     })));
   }
