@@ -15,7 +15,7 @@ function NewAnswer(props) {
         <button onClick={props.onCancel}>
           Cancel
         </button>
-        <button onClick={props.onSubmit}>
+        <button onClick={() => props.onSubmit(details)}>
           Submit
         </button>
       </div>

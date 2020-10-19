@@ -9,19 +9,39 @@ router.get('/', rejectUnauthenticated, async (req, res, next) => {
       req.user.authLevel === 'INSTRUCTOR' ?
         // Instructors can see all answers
         [`
-          SELECT * FROM "answer";
+          SELECT
+            "answer".*, 
+            "answerAuthor".id as "authorId",
+            "answerAuthor"."fullName" as "authorFullName" 
+          FROM "answer"
+          JOIN "user" "answerAuthor" on answer."authorId" = "answerAuthor".id;
         `, []] :
         // Students may only see answers to questions
         // from their own cohort
         [`
-          SELECT "answer".* FROM "answer"
+          SELECT 
+            "answer".*, 
+            "answerAuthor".id as "authorId",
+            "answerAuthor"."fullName" as "authorFullName"
+          FROM "answer"
           JOIN question on answer."questionId" = question.id
-          JOIN "user" on question."authorId" = "user".id
-          WHERE "user"."cohortId" = $1;
+          JOIN "user" "answerAuthor" on answer."authorId" = "answerAuthor".id 
+          JOIN "user" "questionAuthor" on question."authorId" = "questionAuthor".id
+          WHERE "questionAuthor"."cohortId" = $1;
         `, [req.user.cohortId]]
 
     const dbRes = await pool.query(queryString, queryParams);
-    res.send(dbRes.rows);
+    const rows = dbRes.rows.map(row => ({
+      id: row.id,
+      details: row.details,
+      isAccepted: row.isAccepted,
+      questionId: row.questionId,
+      author: {
+        id: row.authorId,
+        fullName: row.authorFullName
+      }
+    }))
+    res.send(rows);
   }
   catch (err) {
     next(err);
