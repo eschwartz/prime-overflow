@@ -71,6 +71,21 @@ class QuestionDetails extends Component {
     this.toggleEditQuestionMode();
   }
 
+  deleteQuestion = () => {
+    const isConfirmed = window.confirm('Are you sure you want to delete this question?');
+    if (!isConfirmed) {
+      return;
+    }
+
+    this.props.dispatch({
+      type: 'DELETE_QUESTION',
+      payload: this.props.question.id
+    });
+
+    // Navigate to the questions list view
+    this.props.history.push('/questions');
+  }
+
   render() {
     console.log('props', this.props);
     console.log('state', this.state);
@@ -84,10 +99,12 @@ class QuestionDetails extends Component {
     
     // Question are editable by the author,
     // or by any instructor
-    const canEdit = (
+    const canEditQuestion = (
       this.props.user.authLevel === 'INSTRUCTOR' ||
       question.author.id === this.props.user.id
     );
+    // If we can edit a question, we can delete a question
+    const canDeleteQuestion = canEditQuestion;
 
 
     return (
@@ -115,6 +132,12 @@ class QuestionDetails extends Component {
               <button onClick={this.toggleEditQuestionMode}>Cancel</button>
               <button onClick={this.onSaveQuestionDraft}>Save Question</button>
             </div>
+            {/* Delete Question Button */}
+            {canDeleteQuestion && 
+              <div>
+                <button onClick={this.deleteQuestion}>Delete Question</button>
+              </div>
+            }
           </>
           :
           <div>
@@ -124,8 +147,14 @@ class QuestionDetails extends Component {
               {question.details}
             </div>
             <em>Asked by {question.author.fullName}</em>
-            {canEdit && 
+            {canEditQuestion && 
               <button onClick={this.toggleEditQuestionMode}>Edit Question</button>
+            }
+            {/* Delete Question Button */}
+            {canDeleteQuestion && 
+              <div>
+                <button onClick={this.deleteQuestion}>Delete Question</button>
+              </div>
             }
           </div>
         }

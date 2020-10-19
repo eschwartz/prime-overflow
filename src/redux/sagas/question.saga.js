@@ -54,10 +54,23 @@ function* saveDraftQuestion() {
   });
 }
 
+function* deleteQuestion(action) {
+  yield axios({
+    method: 'DELETE',
+    url: `/api/question/${action.payload}`
+  });
+
+  // Reload questions from server
+  yield put({
+    type: 'FETCH_QUESTIONS'
+  });
+}
+
 function* userSaga() {
   yield takeLatest('FETCH_QUESTIONS', fetchQuestions);
   yield takeEvery('CREATE_QUESTION', createQuestion);
   yield takeEvery('SAVE_DRAFT_QUESTION', saveDraftQuestion);
+  yield takeLatest('DELETE_QUESTION', deleteQuestion);
 }
 
 export default userSaga;

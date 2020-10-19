@@ -28,30 +28,22 @@ router.post('/', rejectUnauthenticated, async (req, res, next) => {
 });
 
 router.put('/:id', rejectUnauthenticated, async(req, res, next) => {
-  const sendMissingError = () => 
-    res.status(404).send({ message: `Question ${req.params.id} does not exist`});
-
-  
-  // Basic input validation
-  for (let key of ['title', 'details']) {
-    if (!req.body.hasOwnProperty(key)) {
-      res.status(400)
-        .json({ message: `missing required field: ${key}`});
-      return
-    }
-  }
-
   try {
-    if (req.user.authLevel !== 'INSTRUCTOR') {
-      // For students, grab the question first, 
-      // to make sure we access to update.
-      const dbSelectRes = await pool.query(`
-        SELECT * FROM "question" 
-        WHERE question."authorId" = $1;
-      `, [req.user.id]);
-      if (dbSelectRes.rows.length === 0) {
-        return sendMissingError();
+    const send404 = () => 
+      res.status(404).send({ message: `Question ${req.params.id} does not exist`});
+    
+    // Basic input validation
+    for (let key of ['title', 'details']) {
+      if (!req.body.hasOwnProperty(key)) {
+        res.status(400)
+          .json({ message: `missing required field: ${key}`});
+        return
       }
+    }
+
+    // Send a 404, if the user does not have access
+    if (!(await mayUserModify(req.user, req.params.id))) {
+      return send404();
     }
 
     // Update the record
@@ -61,11 +53,46 @@ router.put('/:id', rejectUnauthenticated, async(req, res, next) => {
       WHERE id = $3
       RETURNING *;
     `, [req.body.title, req.body.details, req.params.id]);
+
+    // Return a 404, if no record was updtead
     if (dbRes.rows.length === 0) {
-      return sendMissingError();
+      return send404();
     }
+
+    // Send back the updated row
     res.send(dbRes.rows[0]);
-    return;
+  }
+  catch (err) {
+    next(err);
+  }
+})
+
+router.delete('/:id', rejectUnauthenticated, async(req, res, next) => {
+  try {
+    // Send a 404, if the user does not have access
+    if (!(await mayUserModify(req.user, req.params.id))) {
+      res.status(404).send({ 
+        message: `Question ${req.params.id} does not exist`
+      });
+      return;
+    }
+
+    // DELETE the record
+    const dbRes = await pool.query(`
+      DELETE FROM "question"
+      WHERE id = $1
+      RETURNING *;
+    `, [req.params.id]);
+
+    // Send a 404, if no record was deleted
+    if (dbRes.rows.length === 0) {
+      res.status(404).send({ 
+        message: `Question ${req.params.id} does not exist`
+      });
+      return;
+    }
+
+    res.sendStatus(204);
   }
   catch (err) {
     next(err);
@@ -112,5 +139,21 @@ router.get('/', rejectUnauthenticated, async(req, res, next) => {
     next(err);
   }
 })
+
+async function mayUserModify(user, questionId) {
+  if (user.authLevel === 'INSTRUCTOR') {
+    return true;
+  }
+
+  const dbRes = await pool.query(`
+    SELECT * FROM "question" 
+    WHERE question.id = $1;
+  `, [questionId]);
+
+  return (
+    dbRes.rows.length !== 0 &&
+    dbRes.rows[0].authorId === user.id
+  );
+}
 
 module.exports = router;

@@ -20,7 +20,7 @@ class NewQuestion extends Component {
       payload: {
         question: this.state,
         onCreate: (question) => {
-          this.props.history.push(`/question/${question.id}`);
+          this.props.history.push(`/questions/${question.id}`);
         }
       }
     });
