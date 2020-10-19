@@ -21,20 +21,20 @@ CREATE TABLE "question" (
 	"id" SERIAL PRIMARY KEY,
 	"title" VARCHAR(512),
 	"details" VARCHAR(2048),
-	"authorId" INT REFERENCES "user"
+	"authorId" INT REFERENCES "user" ON DELETE CASCADE
 );
 
 CREATE TABLE "answer" (
 	"id" SERIAL PRIMARY KEY,
 	"details" VARCHAR(2048),
-	"authorId" INT REFERENCES "user",
-	"questionId" INT REFERENCES "question",
+	"authorId" INT REFERENCES "user" ON DELETE CASCADE,
+	"questionId" INT REFERENCES "question" ON DELETE CASCADE,
 	"isAccepted" BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE "answerComment" (
 	"id" SERIAL PRIMARY KEY,
 	"details" VARCHAR(2048),
-	"authorId" INT REFERENCES "user",
-	"answerId" INT REFERENCES "answer"
+	"authorId" INT REFERENCES "user" ON DELETE CASCADE,
+	"answerId" INT REFERENCES "answer" ON DELETE CASCADE
 );
