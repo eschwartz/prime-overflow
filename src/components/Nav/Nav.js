@@ -32,9 +32,11 @@ const Nav = (props) => {
         {props.store.user.id && (
           <>
             
-            <Link className="nav-link" to="/questions/new">
-              Ask a Question
-            </Link>
+            {props.store.user.authLevel === 'STUDENT' &&
+              <Link className="nav-link" to="/questions/new">
+                Ask a Question
+              </Link>
+            }
 
             <LogOutButton className="nav-link" />
           </>
