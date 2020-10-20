@@ -7,10 +7,12 @@ const questionsReducer = (state = [], action) => {
   }
 }
 
-export const activeQuestion = (state = {}, action) => {
+export const questionToEdit = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_ACTIVE_QUESTION':
+    case 'SET_QUESTION_TO_EDIT':
       return action.payload;
+    case 'EDIT_QUESTION':
+      return {...state, ...action.payload};
     default:
       return state;
   }
