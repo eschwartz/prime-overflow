@@ -111,6 +111,62 @@ router.get('/', rejectUnauthenticated, async(req, res, next) => {
   catch (err) {
     next(err);
   }
-})
+});
+
+
+router.get('/:id', rejectUnauthenticated, async(req, res, next) => {
+  try {
+    const isInstructor = req.user.authLevel === 'INSTRUCTOR';
+    const dbRes = await pool.query(`
+      SELECT 
+        question.id,
+        question.title, 
+        question.details,
+        "user"."id" as "authorId",
+        "user"."fullName" as "authorFullName",
+        "user"."username" as "authorUsername",
+        "cohort"."name" as "cohortName",
+        "cohort"."id" as "cohortId"
+      FROM "question"
+      JOIN "user" on "user"."id" = "question"."authorId"
+      JOIN "cohort" on "user"."cohortId" = "cohort"."id"
+      WHERE question.id = $1
+      ${isInstructor ? ';' : `
+        WHERE "cohort"."id" = $1
+      `};
+    `, isInstructor ? 
+      [req.params.id] : 
+      [req.params.id, req.user.cohortId]
+    );
+
+
+    // Grab the first row
+    let row = dbRes.rows[0];
+
+    // Return a 404, if no results
+    if (!row) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.send({
+      id: row.id,
+      title: row.title,
+      details: row.details,
+      author: {
+        id: row.authorId,
+        fullName: row.authorFullName,
+        username: row.authorUsername,
+        cohort: {
+          id: row.cohortId,
+          name: row.cohortName
+        }
+      }
+    })
+  }
+  catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;
