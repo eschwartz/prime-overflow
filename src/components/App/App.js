@@ -13,7 +13,7 @@ import Footer from '../Footer/Footer';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
-import NewQuestion from '../NewQuestion/NewQuestion';
+import QuestionForm from '../QuestionForm/QuestionForm';
 import QuestionDetails from '../QuestionDetails/QuestionDetails';
 import QuestionList from '../QuestionList/QuestionList'
 import AboutPage from '../AboutPage/AboutPage';
@@ -49,7 +49,12 @@ class App extends Component {
             <ProtectedRoute
               exact
               path="/questions/new"
-              component={NewQuestion}
+              component={QuestionForm}
+            />
+
+            <ProtectedRoute 
+              path="/questions/edit/:id"
+              component={QuestionForm}
             />
 
             <ProtectedRoute

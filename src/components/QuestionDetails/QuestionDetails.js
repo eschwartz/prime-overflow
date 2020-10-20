@@ -38,6 +38,11 @@ class QuestionDetails extends Component {
     this.toggleNewAnswerMode();
   }
 
+  onEdit = () => {
+    this.props.history
+      .push(`/questions/edit/${this.props.question.id}`);
+  }
+
   render() {
     console.log('props', this.props);
     const question = this.props.question;
