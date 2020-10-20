@@ -12,11 +12,6 @@ function* createQuestion(action) {
     type: 'FETCH_QUESTIONS'
   });
 
-  yield put({
-    type: 'SET_ACTIVE_QUESTION',
-    payload: res.data
-  });
-
   action.payload.onCreate(res.data);
 }
 

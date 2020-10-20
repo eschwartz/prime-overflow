@@ -7,13 +7,4 @@ const questionsReducer = (state = [], action) => {
   }
 }
 
-export const activeQuestion = (state = {}, action) => {
-  switch (action.type) {
-    case 'SET_ACTIVE_QUESTION':
-      return action.payload;
-    default:
-      return state;
-  }
-}
-
 export default questionsReducer;
