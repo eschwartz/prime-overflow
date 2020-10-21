@@ -132,7 +132,7 @@ router.get('/:id', rejectUnauthenticated, async(req, res, next) => {
       JOIN "cohort" on "user"."cohortId" = "cohort"."id"
       WHERE question.id = $1
       ${isInstructor ? ';' : `
-        WHERE "cohort"."id" = $1
+        AND "cohort"."id" = $2
       `};
     `, isInstructor ? 
       [req.params.id] : 
