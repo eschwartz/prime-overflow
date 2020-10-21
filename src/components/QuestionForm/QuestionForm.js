@@ -10,6 +10,8 @@ class QuestionForm extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
+    // If our question ID has changed, 
+    // we need to re-fetch data from the server (or reset the form)
     if (prevProps.question.id !== this.props.question.id) {
       this.refreshQuestion();
     }
@@ -92,10 +94,6 @@ class QuestionForm extends Component {
   }
 }
 
-export default connect((store, props) => {
-  // If we're in edit more
-  // use the question from the redux store
-  return {
-    question: store.questionToEdit
-  }
-})(QuestionForm);
+export default connect((store) => ({
+  question: store.questionToEdit
+}))(QuestionForm);
