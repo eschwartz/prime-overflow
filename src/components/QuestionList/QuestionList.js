@@ -46,7 +46,7 @@ class QuestionList extends Component {
 
         <Grid container spacing={3}>
           {this.props.questions.map(question => 
-            <Grid item xs={12} md={6} lg={3} key={question.id}>
+            <Grid item xs={12} sm={6} md={3} key={question.id}>
               <Paper className={classes.paper}>
                 <h3>
                   <Link to={`/questions/${question.id}`}>{question.title}</Link>
