@@ -1,44 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
-import { withStyles } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 
 const styles = {
   paper: {
     padding: 20,
-    background: 'peachpuff',
-    // .paper h3 { margin-top: 0; }
-    '& h3': {
-      marginTop: 0,
-    },
-    '& h3:hover': {
+    background: "peachpuff",
+    '& a': {
+      display: 'inline-block',
       color: 'green',
-      transform: 'rotate(180deg)'
+      '&:hover': {
+        color: 'orange',
+        textDecoration: 'none',
+        transform: 'rotate(180deg)'
+      }
     }
   }
 };
-
-
-function MyAwesomeGrid(props) {
-  return (
-    <Grid container spacing={5}>
-      {props.items.map(item => 
-        <Grid item xs={12} sm={6} md={3} key={item.id}>
-          <Paper className={props.classes.paper}>
-            <h3>{item.title}</h3>
-            <div>{item.details}</div>
-          </Paper>
-        </Grid>
-      )}
-    </Grid>
-  )
-}
-
-const StyledGrid = withStyles(styles)(MyAwesomeGrid);
-
 
 class QuestionList extends Component {
 
@@ -58,23 +40,28 @@ class QuestionList extends Component {
 
   render() {
     const classes = this.props.classes;
-
     return (
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <h1>Questions Search</h1>
 
-        <StyledGrid 
-          items={this.props.questions}
-        />
+        <Grid container spacing={3}>
+          {this.props.questions.map(question => 
+            <Grid item xs={12} sm={6} md={3} key={question.id}>
+              <Paper className={classes.paper}>
+                <h3>
+                  <Link to={`/questions/${question.id}`}>{question.title}</Link>
+                </h3>
+                <div>{this.truncateDetails(question.details, 20)}</div>
+                <div>-- {question.author.fullName} ({question.author.cohort.name})</div>
+              </Paper>
+            </Grid>
+          )}
+        </Grid>
       </Container>
     );
   }
 }
 
-
 export default connect(store => ({
   questions: store.questions
 }))(withStyles(styles)(QuestionList));
-
-
-
