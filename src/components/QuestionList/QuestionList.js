@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import Paper from '@material-ui/core/Paper';
+
+const styles = {
+  paper: {
+    padding: 20
+  }
+};
 
 class QuestionList extends Component {
 
@@ -19,26 +29,29 @@ class QuestionList extends Component {
   }
 
   render() {
+    const classes = this.props.classes;
     return (
-      <>
+      <Container maxWidth="lg">
         <h1>Questions Search</h1>
 
-        <ul>
+        <Grid container spacing={3}>
           {this.props.questions.map(question => 
-            <>
-              <h3>
-                <Link to={`/questions/${question.id}`}>{question.title}</Link>
-              </h3>
-              <div>{this.truncateDetails(question.details, 20)}</div>
-              <div>-- {question.author.fullName} ({question.author.cohort.name})</div>
-            </>
+            <Grid item xs={12} md={6} lg={3} key={question.id}>
+              <Paper className={classes.paper}>
+                <h3>
+                  <Link to={`/questions/${question.id}`}>{question.title}</Link>
+                </h3>
+                <div>{this.truncateDetails(question.details, 20)}</div>
+                <div>-- {question.author.fullName} ({question.author.cohort.name})</div>
+              </Paper>
+            </Grid>
           )}
-        </ul>
-      </>
+        </Grid>
+      </Container>
     );
   }
 }
 
 export default connect(store => ({
   questions: store.questions
-}))(QuestionList);
+}))(withStyles(styles)(QuestionList));
