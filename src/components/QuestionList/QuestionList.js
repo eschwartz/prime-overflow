@@ -8,7 +8,17 @@ import Paper from '@material-ui/core/Paper';
 
 const styles = {
   paper: {
-    padding: 20
+    padding: 20,
+    background: "peachpuff",
+    '& a': {
+      display: 'inline-block',
+      color: 'green',
+      '&:hover': {
+        color: 'orange',
+        textDecoration: 'none',
+        transform: 'rotate(180deg)'
+      }
+    }
   }
 };
 
