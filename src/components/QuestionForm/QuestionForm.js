@@ -6,14 +6,16 @@ class QuestionForm extends Component {
 
 
   componentDidMount = () => {
-    this.init();
+    this.refreshQuestion();
   }
 
   componentDidUpdate = (prevProps) => {
-    this.init();
+    if (prevProps.question.id !== this.props.question.id) {
+      this.refreshQuestion();
+    }
   }
 
-  init() {
+  refreshQuestion() {
     // If we're in "Edit" mode,
     // Fetch the question to edit
     if (this.props.match.params.id) {
@@ -25,10 +27,8 @@ class QuestionForm extends Component {
     }
 
     // If we're in CREATE mode (eg. /question/new)
-    // but the redux state `questionToEdit` has an id,
-    // then we're looking at an old question
-    // and we should clear it out
-    else if (this.props.question.id) {
+    // clear any existing question data
+    else {
       this.props.dispatch({
         type: 'CLEAR_QUESTION_TO_EDIT'
       });
