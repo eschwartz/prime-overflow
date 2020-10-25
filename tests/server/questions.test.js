@@ -3,6 +3,7 @@ process.env.TEST = 'true';
 const app = require('../../server/server');
 const pool = require('../../server/modules/pool')
 const testServer = require('supertest');
+const agent = testServer.agent(app);
 
 describe('Creating and getting questions', () => {
 
@@ -12,10 +13,6 @@ describe('Creating and getting questions', () => {
 
     // Reset the user table
     await pool.query(`DELETE FROM "user"`);
-  });
-
-  test('should GET questions', async() => {
-    const agent = testServer.agent(app);
     
     // Register
     const registerRes = await agent
@@ -30,14 +27,16 @@ describe('Creating and getting questions', () => {
       .send({ username: 'edan', password: 'testpass' });
     
     expect(loginRes.statusCode).toBe(200);
+  });
 
+  test('should GET questions', async() => {
     // Create a question
     const createRes = await agent
       .post('/api/question')
       .send({
         title: 'How do you write integration tests?',
         details: 'Testing is so fun!'
-      })
+      });
     
     expect(createRes.statusCode).toBe(201);
 
