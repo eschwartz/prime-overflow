@@ -87,7 +87,7 @@ router.get('/', rejectUnauthenticated, async(req, res, next) => {
         "cohort"."id" as "cohortId"
       FROM "question"
       JOIN "user" on "user"."id" = "question"."authorId"
-      JOIN "cohort" on "user"."cohortId" = "cohort"."id"
+      LEFT JOIN "cohort" on "user"."cohortId" = "cohort"."id"
       ${isInstructor ? ';' : `
         WHERE "cohort"."id" = $1
       `};
