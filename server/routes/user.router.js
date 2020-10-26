@@ -14,7 +14,7 @@ router.get('/current', rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', rejectUnauthenticated, (req, res) => {
   pool.query(`
     UPDATE "user" 
     SET "cohortId" = $1

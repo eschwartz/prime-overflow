@@ -30,7 +30,7 @@
     "client": "react-scripts start",
     "server": "nodemon --watch server server/server.js",
     "build": "react-scripts build",
-    "test": "jest --verbose --forceExit",
+    "test": "jest --verbose --forceExit --runInBand",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
