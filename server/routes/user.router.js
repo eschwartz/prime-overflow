@@ -15,6 +15,12 @@ router.get('/current', rejectUnauthenticated, (req, res) => {
 });
 
 router.put('/:id', rejectUnauthenticated, (req, res) => {
+  // Only allow instructors to set a user's cohort
+  if (req.user.authLevel !== 'INSTRUCTOR') {
+    res.sendStatus(403);
+    return;
+  }
+
   pool.query(`
     UPDATE "user" 
     SET "cohortId" = $1

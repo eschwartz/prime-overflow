@@ -10,7 +10,7 @@ const app = require('../../server/server');
 const agent = supertest.agent(app);
 
 describe('Add user to cohort', () => {
-  let student;
+  let user;
 
   beforeEach(async() => {
     // Empty the user table, before each test
@@ -20,34 +20,41 @@ describe('Add user to cohort', () => {
     // Register a new user
     let studentRes = await agent
       .post('/api/user/register')
-      .send({ username: 'Mike', password: 'testpass', fullName: 'Mike S' });
+      .send({ username: 'Edan', password: 'testpass', fullName: 'Edan S' });
     
     // Register should succeed
     expect(studentRes.statusCode).toBe(201);
-    student = studentRes.body;
+    user = studentRes.body;
 
     // Student ID should be an integer
-    expect(Number.isInteger(student.id)).toBe(true);
+    expect(Number.isInteger(user.id)).toBe(true);
+
+    // Make user an instructor
+    await pool.query(`
+      UPDATE "user" 
+      SET "authLevel" = 'INSTRUCTOR'
+      WHERE "user".id = $1
+    `, [user.id]);
 
     // Login
     let loginRes = await agent
       .post('/api/user/login')
-      .send({ username: 'Mike', password: 'testpass' });
+      .send({ username: 'Edan', password: 'testpass' });
     expect(loginRes.statusCode).toBe(200);
   })
 
   test(`should update a users cohort`, async () => {
     // Update the student's cohort
     let updateRes = await agent
-      .put(`/api/user/${student.id}`)
+      .put(`/api/user/${user.id}`)
       .send({ cohortId: 1 });
 
     expect(updateRes.statusCode).toBe(200);
     expect(updateRes.body).toMatchObject({
-      id: student.id,
-      authLevel: 'STUDENT',
-      username: 'Mike',
-      fullName: 'Mike S',
+      id: user.id,
+      authLevel: 'INSTRUCTOR',
+      username: 'Edan',
+      fullName: 'Edan S',
       cohortId: 1,
     });
   });
@@ -60,18 +67,36 @@ describe('Add user to cohort', () => {
 
     // Attempt to update user (should fail)
     let updateRes = await agent
-      .put(`/api/user/${student.id}`)
+      .put(`/api/user/${user.id}`)
       .send({ cohortId: 1 });
     
     expect(updateRes.statusCode).toBe(403);
   });
 
-  test(`should only allow instructors`, () => {
+  test(`should only allow instructors`, async() => {
+    // Make logged-in user a student
+    await pool.query(`
+      UPDATE "user"
+      SET "authLevel" = 'STUDENT'
+      WHERE id = $1
+    `, [user.id]);
 
+    // Attempt to update user (should fail)
+    let updateRes = await agent
+     .put(`/api/user/${user.id}`)
+     .send({ cohortId: 1 });
+   
+    expect(updateRes.statusCode).toBe(403);
   });
 
-  test(`should not allow changing username or password`, () => {
+  test(`should not return the users password`, async() => {
+    // Update the student username / password
+    let updateRes = await agent
+      .put(`/api/user/${user.id}`)
+      .send({ cohortId: 1, username: 'newUser' });
 
+    expect(updateRes.statusCode).toBe(200);
+    expect(updateRes.body.password).toBe(undefined);
   });
 
 })
