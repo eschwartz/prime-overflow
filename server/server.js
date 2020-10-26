@@ -52,3 +52,9 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
+
+
+// Export our express app
+// so we can test against it
+// with supertest
+module.exports = app;

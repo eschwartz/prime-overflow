@@ -26,7 +26,14 @@ if (process.env.DATABASE_URL) {
     max: 10, // max number of clients in the pool
     idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
   };
-} else {
+} 
+// Use test database for testing
+else if (process.env.TEST) {
+  config = {
+    database: 'prime_overflow_test'
+  };
+}
+else {
   config = {
     host: 'localhost', // Server hosting the postgres database
     port: 5432, // env var: PGPORT
