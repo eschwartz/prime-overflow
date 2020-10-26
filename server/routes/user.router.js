@@ -14,6 +14,24 @@ router.get('/current', rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
 
+router.put('/:id', (req, res) => {
+  pool.query(`
+    UPDATE "user" 
+    SET "cohortId" = $1
+    WHERE id = $2
+    RETURNING *
+  `, [req.body.cohortId, req.params.id])
+    .then(dbRes => {
+      let student = dbRes.rows[0];
+      delete student.password;
+      res.send(student);
+    })
+    .catch(err => {
+      console.error(err);
+      res.send(500);
+    })
+});
+
 // Handles POST request with new user data
 // The only thing different from this and every other post we've seen
 // is that the password gets encrypted before being inserted
@@ -23,11 +41,11 @@ router.post('/register', (req, res, next) => {
   const password = encryptLib.encryptPassword(req.body.password);
 
   const queryText = `
-  INSERT INTO "user" ("fullName", username, password, "authLevel")
-    VALUES ($1, $2, $3, 'INSTRUCTOR') RETURNING id`;
+  INSERT INTO "user" ("fullName", username, password)
+    VALUES ($1, $2, $3) RETURNING id`;
   pool
     .query(queryText, [fullName, username, password])
-    .then(() => res.sendStatus(201))
+    .then((dbRes) => res.status(201).send(dbRes.rows[0]))
     .catch((err) => {
       next(err);
     });

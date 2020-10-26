@@ -27,7 +27,7 @@ if (process.env.DATABASE_URL) {
     idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
   };
 } 
-else if (process.env.TEST === 'true') {
+else if (process.env.TEST) {
   config = {
     host: 'localhost',
     port: 5432,

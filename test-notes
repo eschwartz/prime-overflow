@@ -1,0 +1,10 @@
+PUT /user/:id
+  {
+    cohort: "Tarjan"
+  }
+
+
+Should update a users cohort
+Should require auth
+Must be instructor
+Should not allow changing username or password
